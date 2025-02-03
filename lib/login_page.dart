@@ -12,119 +12,184 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _driverIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isDriverIdError = false;
+  bool _isPasswordError = false;
   bool _isPasswordVisible = false;
+
+  void _validateAndLogin() {
+    setState(() {
+      // Reset errors when user starts typing
+      if (_driverIdController.text.isNotEmpty) {
+        _isDriverIdError = false;
+      }
+      if (_passwordController.text.isNotEmpty) {
+        _isPasswordError = false;
+      }
+
+      // Show error if fields are empty
+      if (_driverIdController.text.isEmpty && _passwordController.text.isEmpty) {
+        _isDriverIdError = true;
+        _isPasswordError = true;
+      } else if (_driverIdController.text.isEmpty) {
+        _isDriverIdError = true;
+      } else if (_passwordController.text.isEmpty) {
+        _isPasswordError = true;
+      } else {
+        // Both fields are filled, proceed with login
+        _isDriverIdError = false;
+        _isPasswordError = false;
+        // Add your login logic here (e.g., navigate to the next page)
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFcad2c5), // Light Sage background
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Driver Login',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF52796f), // Deep Green
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    'Bus Code: ${widget.busCode.toUpperCase()}',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF52796f), // Deep Green
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  TextField(
-                    controller: _driverIdController,
-                    decoration: InputDecoration(
-                      hintText: 'Driver ID',
-                      hintStyle: TextStyle(color: Color(0xFF84a98c)), // Muted Green hint
-                      labelStyle: TextStyle(color: Color(0xFF52796f)), // Deep Green label
-                      prefixIcon: Icon(Icons.person, color: Color(0xFF52796f)),
-                      filled: true,
-                      fillColor: Color(0xFF2f3e46), // Dark Slate for background
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: !_isPasswordVisible,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      hintStyle: TextStyle(color: Color(0xFF84a98c)), // Muted Green hint
-                      labelStyle: TextStyle(color: Color(0xFF52796f)), // Deep Green label
-                      prefixIcon: Icon(Icons.lock, color: Color(0xFF52796f)),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                          color: Color(0xFF52796f),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
-                      filled: true,
-                      fillColor: Color(0xFF2f3e46), // Dark Slate for background
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_driverIdController.text.isEmpty || _passwordController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Please enter both Driver ID and Password.'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } else {
-                        // Add authentication logic here
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFa7bea9), // Soft Green
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24.0),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 12.0),
-                      elevation: 4,
-                    ),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                  ),
-                ],
+      extendBodyBehindAppBar: true, // Removes the top bar
+      backgroundColor: Colors.transparent, // Transparent background
+      body: Stack(
+        children: [
+          // Animated tech background
+          AnimatedContainer(
+            duration: Duration(seconds: 5),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue[900]!, Colors.indigo[900]!],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
           ),
-        ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+                elevation: 8.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                color: Color(0xFF1E1E2E), // Dark Purple
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Driver Login',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        'Bus Code: ${widget.busCode.toUpperCase()}',
+                        style: TextStyle(fontSize: 20.0, color: Colors.white70),
+                      ),
+                      SizedBox(height: 20.0),
+                      // Driver ID Field with Icon
+                      TextField(
+                        controller: _driverIdController,
+                        decoration: InputDecoration(
+                          hintText: 'Driver ID',
+                          filled: true,
+                          fillColor: Color(0xFF2A2A3E),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                        onChanged: (_) => setState(() {
+                          if (_driverIdController.text.isNotEmpty) {
+                            _isDriverIdError = false;
+                          }
+                        }),
+                      ),
+                      // Show error message if Driver ID is empty
+                      if (_isDriverIdError)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Text(
+                            'Please enter your Driver ID.',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      SizedBox(height: 16.0),
+                      // Password Field with Eye Icon
+                      TextField(
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          filled: true,
+                          fillColor: Color(0xFF2A2A3E),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.lock,
+                            color: Colors.white,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                        onChanged: (_) => setState(() {
+                          if (_passwordController.text.isNotEmpty) {
+                            _isPasswordError = false;
+                          }
+                        }),
+                      ),
+                      // Show error message if password is empty
+                      if (_isPasswordError)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Text(
+                            'Please enter your password.',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      SizedBox(height: 20.0),
+                      ElevatedButton(
+                        onPressed: _validateAndLogin,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF7F56D9), // Purple
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Text('Login'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

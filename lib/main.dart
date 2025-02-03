@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'role_selection_page.dart';
+import 'role_selection_page.dart'; // New role selection page
 
 void main() {
   runApp(MyApp());
@@ -9,18 +9,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Operator Login',
+      title: 'Driver Login',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Color(0xFFcad2c5), // Light Grayish background
-        cardColor: Color(0xFF84a98c), // Light Greenish for cards
-        primaryColor: Color(0xFF52796f), // Muted Green
+        scaffoldBackgroundColor: Color(0xFF090909), // Dark Black
+        cardColor: Color(0xFF1E1E2E), // Dark Purple
+        primaryColor: Color(0xFF7F56D9), // Purple
         colorScheme: ColorScheme.dark().copyWith(
-          primary: Color(0xFF52796f),
-          secondary: Color(0xFF354f52),
+          primary: Color(0xFF7F56D9), // Purple
+          secondary: Color(0xFF9A6AFF), // Light Purple
         ),
       ),
-      home: RoleSelectionPage(), // Updated to start with role selection
+      home: SelectRolePage(),
     );
   }
 }
