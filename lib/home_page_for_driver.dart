@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart'; // Import the LoginPage
+import 'dummy_data.dart'; // Import your dummy data file
 
 class HomePageForDriver extends StatefulWidget {
   @override
@@ -10,16 +11,21 @@ class _HomePageForDriverState extends State<HomePageForDriver> {
   final TextEditingController _busCodeController = TextEditingController();
   bool _isBusCodeError = false;
 
+  // Extract valid bus codes from dummy data
+  late final List<String> _dummyBusCodes = busRoutes
+      .map((bus) => bus['busCode'].toString())
+      .toList();
+
   @override
   Widget build(BuildContext context) {
-    double cardWidth = MediaQuery.of(context).size.width * 0.85; // 85% of screen width
+    double cardWidth = MediaQuery.of(context).size.width * 0.85;
 
     return Scaffold(
-      extendBodyBehindAppBar: true, // Removes the top bar
-      backgroundColor: Colors.transparent, // Transparent background
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Animated tech background (same as login page)
+          // Animated tech background
           AnimatedContainer(
             duration: Duration(seconds: 5),
             decoration: BoxDecoration(
@@ -60,7 +66,7 @@ class _HomePageForDriverState extends State<HomePageForDriver> {
                           hintText: 'Enter Bus Code',
                           hintStyle: TextStyle(color: Colors.white70),
                           filled: true,
-                          fillColor: Color(0xFF2A2A3E), // Darker Purple
+                          fillColor: Color(0xFF2A2A3E),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                             borderSide: BorderSide.none,
@@ -72,12 +78,11 @@ class _HomePageForDriverState extends State<HomePageForDriver> {
                         ),
                         style: TextStyle(color: Colors.white),
                       ),
-                      // Show error message if bus code is empty
                       if (_isBusCodeError)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: Text(
-                            'Please enter a bus code.',
+                            'Invalid bus code. Please try again.',
                             style: TextStyle(
                               color: Colors.red,
                               fontSize: 16.0,
@@ -87,11 +92,8 @@ class _HomePageForDriverState extends State<HomePageForDriver> {
                       SizedBox(height: 20.0),
                       ElevatedButton(
                         onPressed: () {
-                          if (_busCodeController.text.isEmpty) {
-                            setState(() {
-                              _isBusCodeError = true;
-                            });
-                          } else {
+                          String enteredCode = _busCodeController.text.trim();
+                          if (_dummyBusCodes.contains(enteredCode)) {
                             setState(() {
                               _isBusCodeError = false;
                             });
@@ -99,13 +101,17 @@ class _HomePageForDriverState extends State<HomePageForDriver> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    LoginPage(busCode: _busCodeController.text),
+                                    LoginPage(busCode: enteredCode),
                               ),
                             );
+                          } else {
+                            setState(() {
+                              _isBusCodeError = true;
+                            });
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF7F56D9), // Purple
+                          backgroundColor: Color(0xFF7F56D9),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24.0),

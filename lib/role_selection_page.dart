@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_page_for_driver.dart'; // Driver page
+import 'user_portal.dart'; // User Portal page
 
 class SelectRolePage extends StatelessWidget {
   @override
@@ -60,7 +61,10 @@ class SelectRolePage extends StatelessWidget {
                       SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: () {
-                          // Navigate to user page (to be implemented)
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => UserPortal()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF9A6AFF), // Light Purple

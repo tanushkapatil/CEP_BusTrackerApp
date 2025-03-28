@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'driver_dashboard.dart'; // Import the DriverDashboard
 
 class LoginPage extends StatefulWidget {
   final String busCode;
@@ -38,7 +39,14 @@ class _LoginPageState extends State<LoginPage> {
         // Both fields are filled, proceed with login
         _isDriverIdError = false;
         _isPasswordError = false;
-        // Add your login logic here (e.g., navigate to the next page)
+
+        // Navigate to DriverDashboard after successful validation
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DriverDashboard(busCode: widget.busCode),
+          ),
+        );
       }
     });
   }
@@ -46,11 +54,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Removes the top bar
-      backgroundColor: Colors.transparent, // Transparent background
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // Animated tech background
           AnimatedContainer(
             duration: Duration(seconds: 5),
             decoration: BoxDecoration(
@@ -69,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16.0),
                 ),
-                color: Color(0xFF1E1E2E), // Dark Purple
+                color: Color(0xFF1E1E2E),
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
@@ -89,7 +96,6 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(fontSize: 20.0, color: Colors.white70),
                       ),
                       SizedBox(height: 20.0),
-                      // Driver ID Field with Icon
                       TextField(
                         controller: _driverIdController,
                         decoration: InputDecoration(
@@ -112,7 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         }),
                       ),
-                      // Show error message if Driver ID is empty
                       if (_isDriverIdError)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
@@ -125,7 +130,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       SizedBox(height: 16.0),
-                      // Password Field with Eye Icon
                       TextField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
@@ -162,7 +166,6 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         }),
                       ),
-                      // Show error message if password is empty
                       if (_isPasswordError)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
@@ -178,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                       ElevatedButton(
                         onPressed: _validateAndLogin,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF7F56D9), // Purple
+                          backgroundColor: Color(0xFF7F56D9),
                           foregroundColor: Colors.white,
                         ),
                         child: Text('Login'),
