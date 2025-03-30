@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'driver_dashboard.dart'; // Import the DriverDashboard
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   final String busCode;
@@ -17,39 +19,36 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordError = false;
   bool _isPasswordVisible = false;
 
-  void _validateAndLogin() {
+  void _validateAndLogin() async {
+  setState(() {
+    _isDriverIdError = _driverIdController.text.isEmpty;
+    _isPasswordError = _passwordController.text.isEmpty;
+  });
+
+  if (_isDriverIdError || _isPasswordError) return;
+
+  final response = await http.post(
+    Uri.parse("http://<ip>:8000/auth/login"),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode({
+      "email": _driverIdController.text,
+      "password": _passwordController.text,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DriverDashboard(busCode: widget.busCode),
+      ),
+    );
+  } else {
     setState(() {
-      // Reset errors when user starts typing
-      if (_driverIdController.text.isNotEmpty) {
-        _isDriverIdError = false;
-      }
-      if (_passwordController.text.isNotEmpty) {
-        _isPasswordError = false;
-      }
-
-      // Show error if fields are empty
-      if (_driverIdController.text.isEmpty && _passwordController.text.isEmpty) {
-        _isDriverIdError = true;
-        _isPasswordError = true;
-      } else if (_driverIdController.text.isEmpty) {
-        _isDriverIdError = true;
-      } else if (_passwordController.text.isEmpty) {
-        _isPasswordError = true;
-      } else {
-        // Both fields are filled, proceed with login
-        _isDriverIdError = false;
-        _isPasswordError = false;
-
-        // Navigate to DriverDashboard after successful validation
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DriverDashboard(busCode: widget.busCode),
-          ),
-        );
-      }
+      _isPasswordError = true;
     });
   }
+}
 
   @override
   Widget build(BuildContext context) {
